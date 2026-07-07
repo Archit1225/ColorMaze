@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
         paintedTiles = 0;
         totalSwipes = 0;
         timeTaken = 0;
+        startTimer = false;
         playerWon = false;
 }
     // Called by each tile when it spawns
