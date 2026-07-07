@@ -6,6 +6,7 @@ public class UI_Controller : MonoBehaviour
     public TMP_InputField seedInput;
     public TMP_Text timeText;
     public TMP_Text swipesText;
+    public TMP_Text scoreText;
 
     [SerializeField] private PuzzleMaker puzzleMaker;
 
@@ -16,15 +17,6 @@ public class UI_Controller : MonoBehaviour
         // Set up the Singleton
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-    }
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void GenerateFromSeed()
@@ -46,7 +38,10 @@ public class UI_Controller : MonoBehaviour
     {
         swipesText.SetText($"Swipes: {totalSwipes}");
     }
-
+    public void SetScoreText(string score)
+    {
+        scoreText.SetText($"Score: {score}");
+    }
     public void SetSeedText(int currentSeed)
     {
         seedInput.text = currentSeed.ToString();

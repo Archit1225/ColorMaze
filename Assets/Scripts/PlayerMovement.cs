@@ -100,15 +100,20 @@ public class PlayerMovement : MonoBehaviour
     {
         isMoving = true;
         GameManager.Instance.AddSwipes();
-        audioSource.PlayOneShot(moveAudio);
         while(!Physics2D.Raycast(transform.position, moveInput, raycastLength, wallLayer))
         {
             transform.position = transform.position + ((Vector3)moveInput * cellSize);
             yield return new WaitForSeconds(0.08f);
         }
-        audioSource.PlayOneShot(collisionAudio);
+        PlaySound(collisionAudio);
         isMoving = false;
         moveInput = Vector2.zero;
+    }
+
+    private void PlaySound(AudioClip audioClip)
+    {
+        audioSource.pitch = Random.Range(0.7f, 1);
+        audioSource.PlayOneShot(audioClip);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

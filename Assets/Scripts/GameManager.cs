@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     private float timeTaken = 0;
     private bool startTimer;
+    private bool playerWon = false;
 
     private void Awake()
     {
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
         paintedTiles = 0;
         totalSwipes = 0;
         timeTaken = 0;
+        playerWon = false;
 }
     // Called by each tile when it spawns
     public void AddPathTile()
@@ -39,6 +41,7 @@ public class GameManager : MonoBehaviour
     }
     public void AddSwipes()
     {
+        if (playerWon) return;
         totalSwipes++;
         if(totalSwipes == 1) startTimer = true;
         UI_Controller.Instance.SetSwipeText(totalSwipes);
@@ -60,6 +63,8 @@ public class GameManager : MonoBehaviour
     private void TriggerWin()
     {
         string score = (10000 / (totalSwipes * timeTaken)).ToString("F2");
+        UI_Controller.Instance.SetScoreText(score);
+        playerWon = true;
         Debug.Log($"Maze Complete! You painted all tiles. Swipes Taken: {totalSwipes}. TimeTaken: {timeTaken}. Score: {score}");
     }
 }
