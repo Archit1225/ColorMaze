@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PathTile : MonoBehaviour
 {
+    [SerializeField] private ParticleSystem _particleSystem;
     private bool isPainted = false;
     private SpriteRenderer spriteRenderer;
 
@@ -21,7 +22,7 @@ public class PathTile : MonoBehaviour
         {
             isPainted = true;
             spriteRenderer.color = Color.green; // Set your painted color here
-
+            _particleSystem.Play();
             GameManager.Instance.TilePainted();
         }
     }

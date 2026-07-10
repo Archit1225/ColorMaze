@@ -65,24 +65,24 @@ public class PuzzleMaker : MonoBehaviour
 
     private void Start()
     {
-        GenerateMaze();
+        GenerateNewMaze();
     }
     //UI Functions
-    public void ResetPuzzle()
+    public void GenerateRandomPuzzle()
     {
         useRandomSeed = true;
-        GenerateMaze();
+        GenerateNewMaze();
     }
 
     public void GenerateFromSeed(int seedToPlay)
     {
         useRandomSeed = false;
         customSeed = seedToPlay;
-        GenerateMaze();
+        GenerateNewMaze();
     }
-    private void GenerateMaze()
+    private void GenerateNewMaze()
     {
-        // 1. Initialize the Seed!
+        //Initialize the Seed
         if (useRandomSeed)
         {
             // Pick a random 6-digit number to act as the seed
@@ -96,12 +96,14 @@ public class PuzzleMaker : MonoBehaviour
 
         // Lock the random number generator to this specific seed
         Random.InitState(currentSeed);
-        // 1. Clean up the old maze if it exists
+
+        //Clean up the old maze if it exists
         if (currentMazeContainer != null)
         {
             Destroy(currentMazeContainer);
         }
 
+        //Difficulty filter
         int attempts = 0;
         int currentScore = 0;
         bool validLevel = false;
@@ -131,6 +133,7 @@ public class PuzzleMaker : MonoBehaviour
         grid = new TileType[width, height];
         stoppingPoints = new List<Vector2Int>();
 
+        //Generates a boundary wall first
         for (int x = 0; x < width; x++)
         {
             grid[x, 0] = TileType.Wall;
@@ -142,6 +145,7 @@ public class PuzzleMaker : MonoBehaviour
             grid[width - 1, y] = TileType.Wall;
         }
 
+        //Initializes Player's starting position
         int currentX = 1;
         int currentY = height - 2;
 
@@ -152,12 +156,14 @@ public class PuzzleMaker : MonoBehaviour
 
         for (int i = 0; i < maxSegments; i++)
         {
+            //If the block had moved vertically it makes sure the next direction is horizontal
             Vector2Int dir1 = movingVertical ? Vector2Int.up : Vector2Int.right;
             Vector2Int dir2 = movingVertical ? Vector2Int.down : Vector2Int.left;
 
             bool canGoDir1 = grid[currentX + dir1.x, currentY + dir1.y] != TileType.Wall;
             bool canGoDir2 = grid[currentX + dir2.x, currentY + dir2.y] != TileType.Wall;
 
+            //If both the direction is blocked by a wall then it randomly chooses previous stopping points
             if (!canGoDir1 && !canGoDir2)
             {
                 Vector2Int randomStop = stoppingPoints[Random.Range(0, stoppingPoints.Count)];
@@ -175,6 +181,7 @@ public class PuzzleMaker : MonoBehaviour
 
             int tilesMoved = 0;
 
+            //Moves until it encounters a wall or it makes a wall
             while (true)
             {
                 int nextX = currentX + chosenDir.x;
@@ -206,6 +213,7 @@ public class PuzzleMaker : MonoBehaviour
             movingVertical = !movingVertical;
         }
 
+        //If there are still some empty tiles left then wall is generated over them
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)

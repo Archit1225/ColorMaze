@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,13 +7,16 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]private bool isMoving = false;
     [SerializeField]private float cellSize;
+    [SerializeField]private float moveSpeed = 25f;
     [SerializeField]private LayerMask wallLayer;
+    [SerializeField]private Rigidbody2D rb;
     [SerializeField]private AudioSource audioSource;
     [SerializeField]private AudioClip moveAudio;
     [SerializeField]private AudioClip collisionAudio;
 
     private float raycastLength;
     private Vector2 moveInput;
+    private CinemachineImpulseSource impulseSource;
 
     public float swipeThreshold = 50f;
     // Internal touch tracking variables
@@ -21,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        impulseSource = GetComponent<CinemachineImpulseSource>();
         raycastLength = cellSize;
     }
     void Update()
@@ -100,20 +105,28 @@ public class PlayerMovement : MonoBehaviour
     {
         isMoving = true;
         GameManager.Instance.AddSwipes();
+        PlaySound(moveAudio, 0.3f);
         while(!Physics2D.Raycast(transform.position, moveInput, raycastLength, wallLayer))
         {
-            transform.position = transform.position + ((Vector3)moveInput * cellSize);
-            yield return new WaitForSeconds(0.08f);
+            Vector2 targetPos = rb.position + (moveInput * cellSize);
+            while (Vector2.Distance(transform.position, targetPos) > 0.001f)
+            {
+                Vector2 nextStep = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+                rb.MovePosition(nextStep);
+                yield return null;
+            }
+            rb.MovePosition(targetPos);
         }
-        PlaySound(collisionAudio);
+        CameraShakeManager.Instance.CameraShake(impulseSource);
+        PlaySound(collisionAudio, 0.5f);
         isMoving = false;
         moveInput = Vector2.zero;
     }
 
-    private void PlaySound(AudioClip audioClip)
+    private void PlaySound(AudioClip audioClip, float volume)
     {
         audioSource.pitch = Random.Range(0.7f, 1);
-        audioSource.PlayOneShot(audioClip);
+        audioSource.PlayOneShot(audioClip, volume);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

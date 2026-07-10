@@ -1,8 +1,10 @@
+using Cinemachine;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    [SerializeField] private CinemachineVirtualCamera cinemachine;
 
     private int totalTiles = 0;
     private int paintedTiles = 0;
@@ -26,12 +28,20 @@ public class GameManager : MonoBehaviour
             UI_Controller.Instance.SetTimeText(timeTaken);
         }
     }
+
+    public void SetVirtualCamera(Transform playerTransform)
+    {
+        cinemachine.Follow = playerTransform;
+    }
     public void ResetData()
     {
         totalTiles = 0;
         paintedTiles = 0;
         totalSwipes = 0;
         timeTaken = 0;
+        UI_Controller.Instance.SetScoreText("");
+        UI_Controller.Instance.SetSwipeText(totalSwipes);
+        UI_Controller.Instance.SetTimeText(timeTaken);
         startTimer = false;
         playerWon = false;
 }

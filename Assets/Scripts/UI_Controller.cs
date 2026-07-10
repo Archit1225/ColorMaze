@@ -27,7 +27,7 @@ public class UI_Controller : MonoBehaviour
 
     public void GenerateRandom()
     {
-        puzzleMaker.ResetPuzzle();
+        puzzleMaker.GenerateRandomPuzzle();
     }
 
     public void SetTimeText(float timeTaken)
