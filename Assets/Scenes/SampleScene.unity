@@ -1316,7 +1316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c06c908433078542b4d8c321b6a3668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraShakeManager
-  globalShakeForce: 3
+  globalShakeForce: 1.5
 --- !u!4 &791210125
 Transform:
   m_ObjectHideFlags: 0
