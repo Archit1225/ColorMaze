@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class PuzzleMaker : MonoBehaviour
 {
@@ -50,7 +49,7 @@ public class PuzzleMaker : MonoBehaviour
 
     [Header("Seed System")]
     [Tooltip("If true, a random seed is chosen every time. If false, it uses Custom Seed.")]
-    public bool useRandomSeed = true;
+    public bool useRandomSeed = false;
     [Tooltip("Type a number here to play a specific level layout.")]
     public int customSeed = 12345;
 
@@ -65,8 +64,19 @@ public class PuzzleMaker : MonoBehaviour
 
     private void Start()
     {
+        useRandomSeed = false;
+        customSeed = GetTodaySeed();
         GenerateNewMaze();
     }
+
+    //Get Today's Seed
+    private int GetTodaySeed()
+    {
+        System.DateTime today = System.DateTime.UtcNow;
+        string formattedDate = today.ToString("MMddyyyy");
+        return int.Parse(formattedDate);
+    }
+
     //UI Functions
     public void GenerateRandomPuzzle()
     {
@@ -85,16 +95,15 @@ public class PuzzleMaker : MonoBehaviour
         //Initialize the Seed
         if (useRandomSeed)
         {
-            // Pick a random 6-digit number to act as the seed
             currentSeed = Random.Range(100000, 999999);
             UI_Controller.Instance.SetSeedText(currentSeed);
         }
         else
         {
             currentSeed = customSeed;
+            Debug.Log($"{currentSeed}");
         }
-
-        // Lock the random number generator to this specific seed
+        //UI_Controller.Instance.SetSeedText(currentSeed);
         Random.InitState(currentSeed);
 
         //Clean up the old maze if it exists

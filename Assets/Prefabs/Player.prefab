@@ -142,7 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   isMoving: 0
   cellSize: 1
-  moveSpeed: 200
+  moveSpeed: 300
   wallLayer:
     serializedVersion: 2
     m_Bits: 8

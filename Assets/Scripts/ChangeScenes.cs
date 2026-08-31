@@ -10,6 +10,8 @@ public class ChangeScenes : MonoBehaviour
         SceneManager.LoadScene(sceneNo);
     }
 
+
+
     public void ExitGame()
     {
         Debug.Log("Attempting to exit the game...");
